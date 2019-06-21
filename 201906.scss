@@ -1,0 +1,1700 @@
+/*
+variables（変数）
+Mixins
+Extends
+common（ウェブサイト共通）  >>  フォント、その他共通、リッチテキスト、CTA、フォーム、区切り線、記事リスト・ページネーション
+logo・navigations（ロゴ・ナビゲーション）
+header・main-visual（ヘッダ・メインビジュアル）
+breadcrumbs（パンくず）
+button（ボタン） >> カスタムボタン、ヘッダーボタン、CTAボタン
+heder (見出し)>>コンテンツエリア、サイド、ブログ
+main（コンテンツ）
+・各ページ・・・toppage servicepage など
+・追加クラス(共通のものがあれば)
+ブログテンプレート
+カテゴリ・タグ自動生成ページ
+side bar（サイドバー） >> タグクラウド  ランキング
+foot（フッター）
+編集画面用CSS（編集画面のみに効くCSS）
+CTAの編集画面に効く
+*/
+/* --------------------------------
+   variables（変数）
+----------------------------------- */
+$base_color: #fff; //ベースカラー
+$main_color: #003791; //メインカラー ネイビー
+//$accent_color:adjust-hue($main_color , 145deg); //補色
+$accent_color: #DF8C3B; //アクセントカラー オレンジ
+
+$header_bg_color: #fff; //ヘッダー全体の背景色
+$navigation_bg_color: $main_color; //グロナビの背景色
+$navigation_text_color: #fff; //グロナビのフォントカラー
+$navigation_hover_bg_color: $main_color; //グロナビをホバーした時の背景色
+$navigation_text_hover_color: #DF8C3B; //グロナビをホバーした時のフォントカラー
+
+$a_text_color: $base_color; //テキストリンクのカラー
+$h_text_color: $base_color; //見出しのカラー
+$base-text-color: #333; //テキストカラー 
+$h_decoration_color : $main_color; //見出しの装飾カラー
+
+$breadcrumbs_bg_color: #fff; //パンくずリストの背景色
+$base_bg_color: #fff; //lighten($main_color , 62%) ;//ベースの背景色
+$even_section_bg_color: #eae8e8; //lighten($main_color , 62%) ; //偶数番目のセクションの背景色
+$tag_color: #A8A8A8; //タグのカラー
+$pagination_color: $main_color; //記事リストパーツのページネーションカラー
+$ranking_color: $main_color; //ランキングの番号カラー
+
+$form_submit_color:$accent_color; //フォームの送信ボタンカラー
+$form_hissu_color: #C70909; //赤 フォームの「必須マーク」カラー
+
+$footer_bg_color: $main_color; //フッター全体の背景色
+$footCont_text_color: $base_color; //フッターコントのフォントカラー
+$copyright_bg_color: #eae8e8; //コピーライトの背景色
+$copyright_text_color: $base_color; //コピーライトのテキストカラー
+
+/*----------------------------------
+  Mixins
+----------------------------------*/
+@mixin breakpoint-sp {
+  @media screen and (max-width: 769px) {
+    @content;
+  }
+}
+
+@mixin breakpoint-tb {
+  @media screen and (min-width: 600px) and (max-width: 769px) {
+    @content;
+  }
+}
+
+@mixin breakpoint-pc {
+  @media screen and (min-width: 769px) {
+    @content;
+  }
+}
+
+// ブレークポイントの設定
+$breakpoints: ('iPhone5': 'screen and (max-width: 320px)',
+'sp': 'screen and (max-width: 568px)',
+'tb': 'screen and (max-width: 768px)',
+'spc': 'screen and (max-width: 1000px)',
+'mpc': 'screen and (min-width: 1600px)',
+'pc': 'screen and (min-width: 1920px)',
+) !default;
+
+@mixin mq($breakpoint: tb) {
+  @media #{map-get($breakpoints, $breakpoint)} {
+    @content;
+  }
+}
+
+// Transform > translate
+@mixin translate($prop...) {
+  -webkit-transform: translate($prop);
+  transform: translate($prop);
+}
+
+@mixin rotate($prop...) {
+  -webkit-transform: rotate($prop);
+  transform: rotate($prop);
+}
+
+// Transition
+@mixin transition($prop...) {
+  -webkit-transition: $prop;
+  transition: $prop;
+  backface-visibility: hidden;
+}
+
+//flexboxプロパティ
+@mixin flexbox {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+@mixin align-items-center {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+@mixin align-items-start {
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+}
+
+@mixin align-items-stretch {
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+}
+
+@mixin flex-wrap-wrap {
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+@mixin flex-wrap-nowrap {
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+}
+
+@mixin flex-direction-row {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+
+@mixin flex-direction-column {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+@mixin justify-content-around {
+  -ms-flex-pack: distribute;
+  justify-content: space-around;
+}
+
+@mixin justify-content-between {
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+@mixin justify-content-center {
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+@mixin justify-content-start {
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+@mixin flex-direction-column-reverse {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: reverse;
+  -ms-flex-direction: column-reverse;
+  flex-direction: column-reverse;
+}
+
+@mixin flexbox-important {
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+}
+
+@mixin flex($grow, $shrink, $basis) {
+  -webkit-box-flex: $grow;
+  -ms-flex: $grow $shrink $basis;
+  flex: $grow $shrink $basis;
+}
+
+//編集画面用CSS
+@mixin edit-page {
+  .frame-root .frame-content {
+    @content;
+  }
+}
+
+//CTAの編集画面用CSS
+@mixin cta-edit {
+  .cms-root {
+    @content;
+  }
+}
+
+//ボタンやリストスタイル用のアイコン
+@mixin icon_btn($icon) {
+  a:before {
+    font-family: fontawesome;
+    content: $icon;
+    padding-right: 10px;
+  }
+}
+
+@mixin icon_list($icon) {
+  li {
+    list-style-type: none;
+
+    &:before {
+      font-family: fontawesome;
+      content: $icon;
+      padding-right: 10px;
+      font-size: 1.2em;
+    }
+  }
+}
+
+//2カラム時、PCとSPでカラムの位置を入れ替える
+@include breakpoint-sp {
+  .reverse {
+    flex-wrap: wrap-reverse;
+    display: flex;
+  }
+}
+
+/* --------------------------------
+   Extends
+----------------------------------- */
+/*Web fonts/*
+
+/*    フォントset     */
+.component span.font-size-72px ,.component.text .font-size-72px { font-size: 72px; @include breakpoint-sp { font-size: 36px; } }
+.component span.font-size-60px ,.component.text .font-size-60px { font-size: 60px; @include breakpoint-sp { font-size: 36px; } }
+.component span.font-size-50px ,.component.text .font-size-50px { font-size: 50px; @include breakpoint-sp { font-size: 26px; } }
+.component span.font-size-46px ,.component.text .font-size-46px { font-size: 46px; @include breakpoint-sp { font-size: 26px; } }
+.component span.font-size-40px ,.component.text .font-size-40px { font-size: 40px; @include breakpoint-sp { font-size: 26px; } }
+.component span.font-size-36px ,.component.text .font-size-36px { font-size: 36px; @include breakpoint-sp { font-size: 26px; } }
+.component span.font-size-30px ,.component.text .font-size-30px { font-size: 30px; @include breakpoint-sp { font-size: 26px; } }
+.component span.font-size-28px ,.component.text .font-size-28px { font-size: 28px; @include breakpoint-sp { font-size: 24px; } }
+.component span.font-size-26px ,.component.text .font-size-26px { font-size: 26px; @include breakpoint-sp { font-size: 22px; } }
+.component span.font-size-25px ,.component.text .font-size-25px { font-size: 25px; @include breakpoint-sp { font-size: 20px; } }
+.component span.font-size-24px ,.component.text .font-size-24px { font-size: 24px; @include breakpoint-sp { font-size: 20px; } }
+.component span.font-size-22px ,.component.text .font-size-22px { font-size: 22px; @include breakpoint-sp { font-size: 18px; } }
+.component span.font-size-20px ,.component.text .font-size-20px { font-size: 20px; @include breakpoint-sp { font-size: 18px; } }
+.component span.font-size-18px ,.component.text .font-size-18px { font-size: 18px; @include breakpoint-sp { font-size: 14px; } }
+.component span.font-size-16px ,.component.text .font-size-16px { font-size: 16px; @include breakpoint-sp { font-size: 14px; } }
+.component span.font-size-14px ,.component.text .font-size-14px { font-size: 14px; @include breakpoint-sp { font-size: 14px; } }
+.component span.font-size-13px ,.component.text .font-size-13px { font-size: 13px; @include breakpoint-sp { font-size: 11px; } }
+.component span.font-size-12px ,.component.text .font-size-12px { font-size: 12px; @include breakpoint-sp { font-size: 10px; } }
+.component span.font-size-10px ,.component.text .font-size-10px { font-size: 10px; @include breakpoint-sp { font-size: 8px; } }
+
+/* その他共通 */
+//スマホだけ・PCだけを表示させる
+.spOnly {
+  @include breakpoint-pc {
+    display: none !important;
+  }
+}
+
+.pcOnly {
+  @include breakpoint-sp {
+    display: none !important;
+  }
+}
+
+//displayNoneクラス
+.displayNone {
+  display: none;
+}
+
+//ギャラリーパーツ
+.poptrox-overlay .poptrox-popup .pic {
+  z-index: 10000;
+}
+
+//iframe
+.component.iframe {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-top: 70%; //縦横比を決める
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+/* --------------------------------
+   common（ウェブサイト共通）
+----------------------------------- */
+/*--- テーマ設定 ---*/
+.theme-fo-base {
+  color: $base_text_color;
+  /*ベースとなるフォントを入れる場所
+  font-family: "游ゴシック", YuGothic, "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, Verdana, sans-serif;*/
+}
+
+/*--- テキスト ---*/
+.theme-fo-base .wrapper .contents {
+  .component.text {}
+
+  /* IEでのEMタグ斜体対策 */
+  .component em.strong {
+    font-style: normal;
+  }
+}
+
+/*--- テキスト end---*/
+/*--- リッチテキスト ---*/
+.theme-fo-base .wrapper .contents {
+  .component.richtext {}
+}
+
+/*--- リッチテキスト end---*/
+/*--- 表---*/
+.theme-fo-base .wrapper .contents {
+   .component.richtext{
+     table {
+      thead{
+       tr{
+        th{
+         position: static;//FF,edgeでボーダー消える現象回避
+        }
+       }
+      }
+      tbody{
+       tr{
+        td{
+         position: static;//FF,edgeでボーダー消える現象回避
+        }
+       }
+      }
+     }
+   }
+ }
+/*--- 表 end---*/
+/*--- CTA---*/
+.theme-fo-base .wrapper .contents {
+  section.cta_sec {
+    .cta-row .cta-column {
+      &:first-child {
+        .component.cta-button {
+          .button-cont a {
+            //通常のボタンのスタイルを書く
+          }
+        }
+      }
+      &:last-child {
+        .component.cta-button {
+          .button-cont a {
+            //目立たせたいのボタンのスタイルを書く
+          }
+        }
+      }
+    }
+  }
+}
+/*--- CTA end---*/
+/*--- フォーム ---*/
+.theme-fo-base .wrapper .contents {
+  .inner {
+    .row {
+      .col {
+        .form {
+          .form-label {
+            &:after {
+              background: $form_hissu_color;
+              ;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/*--- フォーム end---*/
+/*--- 区切り線---*/
+/*--- 区切り線 end---*/
+/*--- 記事リスト---*/
+//ページネーション部分//
+.theme-fo-base .wrapper .contents {
+  .inner .row .col .entry-list .article-list .article-per-page .pagination {
+    li {
+      color: $main_color;
+      background: #fff;
+
+      a {
+        border: 1px solid $accent_color;
+        color: $accent_color;
+      }
+
+      &.active>a {
+        background: $main_color;
+        color: #fff;
+      }
+
+      &:hover>a {
+        background: $accent_color;
+        border: 1px solid $accent_color;
+        color: #fff;
+      }
+    }
+  }
+}
+
+/*--- 記事リスト end---*/
+/*--- タグスタイル共通---*/
+.theme-fo-base .wrapper{
+ .contents{
+ /*--- タグのスタイル---*/
+  .tags{
+   a.tag{
+    border: none;
+    background-color: $tag_color;
+    color: #fff;
+    padding: 4px 15px 2px;
+    border: 1px solid $tag_color;
+    &:hover{
+     color: $tag_color;
+     background-color: #fff;
+     box-sizing: border-box;
+    }
+   }
+  }
+  /*---  タグ自動生成ページ  ---*/
+  .tag-preview article .article-cont .article-meta-info .tag-lists,
+  .category-preview article .article-cont .article-meta-info .tag-lists{
+  .article-tags {
+       background-color: $tag_color;
+       color: #fff;
+       padding: 4px 15px 2px;
+       border: 1px solid #fff;
+       line-height: 1.8;
+       font-size: 13px;
+      i.fa-tags{
+       color: #fff;
+       &::before{
+        content: '';
+       }
+      }
+      a{
+       color: #fff;
+       font-size: 13px;
+       &:hover{
+        color: $tag_color;
+       }
+      }
+       &:hover{
+       background-color: #fff;
+       border: 1px solid $tag_color;
+       color: $tag_color;
+        a{
+         color: $tag_color;
+        }
+        &::before{
+         color: $tag_color;
+        }
+      }
+       &:before {
+        font-family: FontAwesome;
+        content: "\f02b";
+        margin-right: 3px;
+        &:hover{
+         color: $tag_color;
+        }
+       }
+     }
+  }
+  &.blog-contents{
+  .inner{
+   .row{
+    .col{
+     .component.blog_article{
+      //ブログ詳細用スタイル↓
+      .article-eyecatch{
+
+      }
+      .article-post{
+
+       .article-meta-info{
+        span.post-date{
+
+        }
+        p{
+         span.article-tags {
+          background-color: $tag_color;
+          color: #fff;
+          padding: 4px 15px 2px;
+          border: 1px solid #fff;
+          line-height: 1.8;
+          font-size: 13px;
+         i.fa-tags{
+          color: #fff;
+          &::before{
+           content: '';
+          }
+         }
+         a{
+          color: #fff;
+          font-size: 13px;
+          &:hover{
+           color: $tag_color;
+          }
+         }
+          &:hover{
+          background-color: #fff;
+          border: 1px solid $tag_color;
+          color: $tag_color;
+           a{
+            color: $tag_color;
+           }
+           &::before{
+            color: $tag_color;
+           }
+         }
+          &:before {
+           font-family: FontAwesome;
+           content: "\f02b";
+           margin-right: 3px;
+           &:hover{
+            color: $tag_color;
+           }
+          }
+        }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+ }
+
+ //サイドバー内タグスタイル
+  .side.right {
+    /*---  タグクラウド  ---*/
+     .tag_cloud{
+       .tag {
+         border: none;
+         background-color: $tag_color;
+         color: #fff;
+         padding: 4px 15px 2px;
+         border: 1px solid #fff;
+         &:hover{
+         color: $tag_color;
+         background-color: #fff;
+         border: 1px solid $tag_color;
+        }
+       }
+     }
+   }
+}
+/*--- タグスタイル共通 end---*/
+/*--- その他共通のスタイル ---*/
+/*--- その他共通のスタイル end---*/
+
+/*バグ修正*/
+//タブレット表示のスタイルの崩れ（記事リストカード型２列３列）
+@include breakpoint-sp {
+  .theme-fo-base {
+    .component.entry-image-card-2-col,
+    .component.entry-image-card-3-col {
+      .entry-list-unit {
+        width: 100%;
+      }
+    }
+  }
+}
+
+/* --------------------------------
+    header・logo・navigations（ヘッダー・ロゴ・ナビゲーション）
+----------------------------------- */
+//1段のとき
+.navi-001-01 header#navigations {
+  border-bottom: 0;
+  box-shadow: 0 0 10px #ddd;
+
+  @media screen and(min-width: 770px) {
+    .logo h1 {
+      line-height: 70px;
+
+      a {
+        height: 70px;
+      }
+    }
+  }
+
+  .main-menu.pc {
+
+    .level-01,
+    .level-01-trigger {
+      border-left: 0;
+      border-right: 0;
+
+      a {
+        padding: 25px 10px;
+      }
+    }
+  }
+}
+
+//2段のとき
+.navi-002-01 header#navigations {
+  background: $header_bg_color;
+
+  .main-menu.pc {
+    .level-01, .level-01-trigger {
+      border-left: none;
+      border-right: none;
+
+      a {
+        padding: 25px 10px;
+        color: $a_text_color;
+        display: block;
+        position: relative;
+        font-size: 13px;
+
+        /* &:after {
+         background: #fff;
+         bottom: 0;
+         content: '';
+         height: 2px;
+         left: 0;
+         position: absolute;
+         right: 0;
+         width: 0%;
+         transition: all .3s ease;
+        } */
+        &:hover {
+          color: $navigation_text_hover_color;
+          opacity: .7;
+          /*  &:after {
+            width: 100%;
+            }*/
+        }
+      }
+    }
+  }
+}
+
+.navi-002-01 header#navigations {
+  padding-bottom: 1px;
+
+  .inner {
+    .navigation-cont {
+      min-height: 70px;
+
+      //ロゴ
+      .logo {
+        height: 50px;
+
+        @include breakpoint-sp {
+          padding: 0 60px 0 20px;
+        }
+
+        @include breakpoint-pc {
+          max-width: 40%;
+        }
+
+        a {
+          height: 70px;
+
+          img {
+            max-height: 100px;
+            vertical-align: middle !important;
+            //    max-width: 80%;
+            padding: 10px 0 0 0;
+
+            @include breakpoint-sp {
+              max-height: 50px;
+            }
+          }
+        }
+      }
+
+      .cont {
+        padding: 18px 0 5px;
+
+        .row .col {
+          @include breakpoint-tb {
+            display: inline-block !important;
+            width: 50% !important;
+          }
+
+          .component.button .button-cont {
+            @include breakpoint-sp {
+              text-align: center;
+            }
+          }
+
+          .component.button.custom_button.access .button-cont a {
+            padding: 10px 25px 10px 45px;
+          }
+        }
+      }
+    }
+
+    .main-menu {
+      border-top: solid 1px #ccc;
+      border-bottom: solid 1px #ccc;
+      background: $navigation_bg_color;
+
+      .level-01,
+      .level-01-trigger {
+        &>a {
+          color: $navigation_text_color;
+        }
+      }
+
+      .level-01:hover {
+        background-color: $navigation_hover_bg_color;
+
+        a {
+          color: $navigation_text_hover_color;
+          opacity: .7;
+        }
+      }
+
+      .level-01-trigger {
+        &:after {
+          //     display: none;
+          color: $navigation_text_color;
+        }
+
+        &:hover {
+          background: $navigation_hover_bg_color;
+
+          &>a {
+            color: $navigation_text_hover_color;
+            opacity: .7;
+          }
+
+          .level-02 a {
+            &:hover {
+              background: $navigation_hover_bg_color;
+              color: $navigation_text_hover_color;
+              opacity: .7;
+            }
+          }
+        }
+
+        .level-01-cont {
+          border: 1px solid $base_color;
+          width: 100%;
+          background: $navigation_bg_color;
+
+          .level-02 a {
+            background: $navigation_bg_color;
+            color: $navigation_text_color;
+          }
+        }
+      }
+    }
+
+    .main-menu.sp {
+      .toggle.fa.fa-angle-up, .toggle.fa.fa-angle-down {
+        &:before {
+          color: #fff;
+          font-size: 25px;
+        }
+      }
+    }
+  }
+}
+
+@include breakpoint-sp {
+  .navi-002-01 header .inner a.menu-trigger {
+    background: $main_color;
+
+    span {
+      background-color: #fff;
+    }
+  }
+}
+
+//グロナビ上にボタン2個//
+.navi-002-01 header#navigations {
+  .inner {
+    .navigation-cont {
+      padding: 10px 0;
+      .logo {
+        div {
+            padding: 0;
+            }
+            @include breakpoint-sp {
+                padding: 0;
+            }
+            @include breakpoint-pc {
+                max-width: 40%;
+            }
+          h1 {
+            a {
+              img {
+              padding: 10px 0 0 0;
+                @include breakpoint-sp {
+                max-height: 50px;
+                }
+                @include breakpoint-tb {
+                max-height: 80px;
+                }
+              }
+            }
+          }
+        }
+        .cont {
+            box-sizing: border-box;
+            width: 500px;
+            @include breakpoint-sp {
+                max-width: 100%;
+                width: 100%;
+                padding: 10px 0;
+            }
+          .row {
+            width: 100%;
+            margin: 0 auto;
+            @include breakpoint-tb {
+                width: 90%;
+            }
+            .col {
+                @include breakpoint-tb {
+                  display: inline-block!important;
+                  width: 50%!important;
+                }
+              .contactBlue_btn {
+                .button-cont {
+                  @include breakpoint-sp {
+                    text-align: center!important;
+                    }
+                  a {
+                    background: transparent;
+                    color: #ff5b2d;
+                    border: 1px solid #ccc;
+                    padding: 10px 30px;
+                    border-radius: 0;
+                    &:before {
+                      content: "\f0e0";
+                      font-family: "FontAwesome";
+                      margin-right: 20px;
+                      }
+                }
+                &:hover {
+                        }
+                      } 
+                    }
+                  }
+              .dlBlue_btn {
+                .button-cont {
+                  @include breakpoint-sp {
+                    text-align: center!important;
+                    }
+                  a {
+                    background: transparent;
+                    color: #fe0f65;
+                    border: 1px solid #ccc;
+                    padding: 10px 30px;
+                    border-radius: 0;
+                    &:before {
+                      content: "\f019";
+                      font-family: "FontAwesome";
+                      margin-right: 20px;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+//グロナビ上にボタン3個//
+/*.navi-002-01 header#navigations {
+    .inner {
+        .navigation-cont {
+            padding: 10px 0;
+            .logo {
+                div {
+                    padding: 0;
+                }
+                @include breakpoint-sp {
+                    padding: 0;
+                }
+                @include breakpoint-pc {
+                    max-width: 40%;
+                }
+                h1 {
+                    a {
+                        img {
+                            padding: 10px 0 0 0;
+                            @include breakpoint-sp {
+                                max-height: 50px;
+                            }
+                            @include breakpoint-tb {
+                                max-height: 80px;
+                            }
+                        }
+                    }
+                }
+            }
+            .cont {
+                box-sizing: border-box;
+                width: 55%;
+                @include breakpoint-sp {
+                    max-width: 100%;
+                    width: 100%;
+                    padding: 10px 0;
+                }
+                .row {
+                    width: 100%;
+                    margin: 0 auto;
+                    @include breakpoint-tb {
+                        width: 90%;
+                    }
+                    .col {
+                        &:first-child {
+                            width: 65%;
+                            float: left;
+                            @include flexbox;
+                            @include justify-content-between;
+                            @include breakpoint-tb {
+                                width: 65%!important;
+                            }
+                            .component.button {
+                                @include breakpoint-tb {
+                                    display: inline-block;
+                                }
+                                .button-cont {
+                                    @include breakpoint-sp {
+
+                                        text-align: center!important;
+                                    }
+                                    a {
+                                        background: transparent;
+                                        color: #333;
+                                    }
+                                }
+                            }
+                        }
+                        &:last-child {
+                            width: 35%;
+                        }
+                        .contactBlue_btn {
+                            @include breakpoint-tb {
+                                display: inline-block;
+                            }
+                            .button-cont {
+                                @include breakpoint-sp {
+                                    text-align: center!important;
+                                }
+                                a {
+                                    background: transparent;
+                                    color: #f60;
+                                    &:before {
+                                        content: "\f0e0";
+                                        font-family: "FontAwesome";
+                                        margin-right: 20px;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}*/
+/*----------------------------------
+main-visual（ヘッダ・メインビジュアル）
+----------------------------------*/
+.theme-fo-base.clearfix {
+
+  /*キャッチコピー・リード文の中央寄せ トップページのみ*/
+  .top-page {
+    min-height: 500px !important;
+    border-bottom: 10px solid #ccc; //MVのアンダーライン
+    /*background-attachment: fixed;*/
+    background-position-y: top;
+    position: relative;
+
+    .clearfix {
+      position: relative;
+    }
+
+    .title-group {
+      max-width: 1100px;
+      margin: auto;
+    }
+  }
+}
+
+/*----------------------------------
+  breadcrumbs（パンくず）
+----------------------------------*/
+.theme-fo-base {
+  .breadcrumbs {
+    //  border-bottom: 1px solid rgba( $base_color ,.1 );
+    margin: 0;
+    background: $breadcrumbs_bg_color;
+    max-width: 100%;
+
+    ul {
+      max-width: 1080px;
+      margin: 0 auto;
+
+      li {
+
+        a,
+        span {
+          color: $a_text_color;
+          text-decoration: unset;
+        }
+      }
+    }
+  }
+}
+
+/*----------------------------------
+button（ボタン）
+----------------------------------*/
+/*--- カスタムボタンサンプル集 ---*/
+.component {
+
+  &.button.btn_custom01,
+  &.button.btn_custom02,
+  &.button.btn_custom03,
+  &.button.btn_custom04,
+  &.button.btn_custom05, {
+    margin-top: 0;
+
+    /*サイズボタン設定*/
+    .button-cont {
+      @include breakpoint-sp {
+
+        //SP時ボタンを中央にするクラス
+        &.sp_center {
+          text-align: center;
+        }
+      }
+
+      a {
+
+        //サイズ小のとき
+        &.size-s {
+          //フォントサイズやボタンの大きさを設定
+          padding: 15px 60px;
+          font-size: 80%;
+
+          @include breakpoint-sp {
+            padding: 10px 15px;
+            width: 50%;
+          }
+
+          &.white {
+            //size-sでwhiteにしたときのスタイルプラスa
+          }
+
+          &.black {
+            //size-sでblackにしたときのスタイルプラスa
+          }
+
+          &.blue {
+            //size-sでblueにしたときのスタイルプラスa
+          }
+        }
+
+        //サイズ中のとき
+        &.size-m {
+          padding: 15px 150px;
+          font-size: 90%;
+
+          @include breakpoint-sp {
+            padding: 15px;
+            width: 80%;
+            font-size: 115%;
+          }
+
+          &.blue {
+            //size-mでblueにしたときのスタイルプラスa
+          }
+        }
+
+        //サイズ大のとき
+        &.size-l {
+          font-size: 120%;
+
+          @include breakpoint-sp {
+            width: 100%;
+            font-size: 125%;
+          }
+
+          &.blue {
+            //size-lでblueにしたときのスタイルプラスa
+          }
+        }
+      }
+    }
+  }
+
+  /*カスタムボタン設定*/
+  //ボタンバリエ01（黒border四角）
+  &.button.btn_custom01 {
+    .button-cont {
+      a {
+        border-radius: 0;
+
+        &.blue, &.red, &.orange, &.black, &.white {
+          //背景色とかborder色など外観を設定
+          background: #fff;
+          color: #333;
+          text-decoration: none;
+          border: 1px solid #222;
+          line-height: 1.5;
+          position: relative;
+          -webkit-transition: all .2s cubic-bezier(.02, .42, .24, .74);
+          -moz-transition: all .2s cubic-bezier(.02, .42, .24, .74);
+          -ms-transition: all .2s cubic-bezier(.02, .42, .24, .74);
+          transition: all .2s cubic-bezier(.02, .42, .24, .74);
+        }
+
+        &:hover {
+          color: #fff;
+          background: #222;
+        }
+      }
+    }
+  }
+
+  //ボタンバリエ02（border金色アイコンなし）
+  &.button.btn_custom02 {
+    .button-cont {
+      a {
+        border-radius: 0;
+
+        //ボタンバリエ02（borderグレイ）
+        &.blue, &.red, &.orange, &.black, &.white {
+          //背景色とかborder色など外観を設定
+          color: #ae9055;
+          border: 1px solid #ae9055;
+          background: #fff;
+          box-sizing: border-box;
+          -moz-box-sizing: border-box;
+          -webkit-box-sizing: border-box;
+          -ms-box-sizing: border-box;
+          transition: all .2s cubic-bezier(.02, .42, .24, .74);
+          -webkit-transition: all .2s cubic-bezier(.02, .42, .24, .74);
+          -ms-transition: all .2s cubic-bezier(.02, .42, .24, .74);
+        }
+
+        &:hover {
+          background: #a9894b;
+          color: #fff;
+        }
+      }
+    }
+  }
+
+  //ボタンバリエ03（border金色アイコンあり）
+  &.button.btn_custom03 {
+    .button-cont {
+      a {
+        border-radius: 0;
+
+        &.blue, &.red, &.orange, &.black, &.white {
+          //背景色とかborder色など外観を設定
+          color: #ae9055;
+          border: 1px solid #ae9055;
+          background: #fff;
+          box-sizing: border-box;
+          -moz-box-sizing: border-box;
+          -webkit-box-sizing: border-box;
+          -ms-box-sizing: border-box;
+          transition: all .2s cubic-bezier(.02, .42, .24, .74);
+          -webkit-transition: all .2s cubic-bezier(.02, .42, .24, .74);
+          -ms-transition: all .2s cubic-bezier(.02, .42, .24, .74);
+
+          &::after {
+            font-family: "FontAwesome";
+            font-size: 14px;
+            content: "\f0e0" !important;
+            color: #bfb091;
+            margin-left: 10px;
+          }
+
+          &:hover {
+            background: #a9894b;
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+
+  //ボタンバリエ04（金色に右アイコン）
+  &.button.btn_custom04 {
+    .button-cont {
+      a {
+        border-radius: 0;
+
+        &.blue, &.red, &.orange, &.black, &.white {
+          //背景色とかborder色など外観を設定
+          background: #A9894B;
+          color: #fff;
+          position: relative;
+          box-sizing: content-box;
+          transition: all 0.2s cubic-bezier(0.02, 0.42, 0.24, 0.74);
+          -webkit-transition: all 0.2s cubic-bezier(0.02, 0.42, 0.24, 0.74);
+          -moz-transition: all 0.2s cubic-bezier(0.02, 0.42, 0.24, 0.74);
+          -ms-transition: all 0.2s cubic-bezier(0.02, 0.42, 0.24, 0.74);
+
+          &:after {
+            font-family: "FontAwesome";
+            content: "\f105" !important;
+            font-size: 18px;
+            color: #bfb091;
+            background: #90743c;
+            background-position: center;
+            background-size: 100%;
+            position: absolute;
+            top: 0;
+            right: 0;
+            /*;height: 45px;*/
+            width: 50px;
+            /*padding-top: 10px;*/
+          }
+        }
+
+        &.size-s {
+          //size-sのときのスタイルプラスa
+          padding: 6px 60px;
+
+          @include breakpoint-sp {
+            padding: 6px 0;
+          }
+        }
+
+        &.size-m {
+          padding: 4px 150px;
+
+          @include breakpoint-sp {
+            padding: 0;
+          }
+        }
+
+        &.size-l {
+          font-size: 115%;
+          padding: 0;
+
+          @include breakpoint-sp {
+            padding: 0;
+          }
+        }
+      }
+    }
+  }
+
+  //ボタンバリエ05（背景色透明）
+  &.button.btn_custom05 {
+    .button-cont {
+      a {
+        border-radius: 0;
+
+        &.blue, &.red, &.orange, &.black, &.white {
+          //背景色とかborder色など外観を設定
+          background-color: transparent;
+          color: #333;
+
+          &::after {
+            /*font-family: "FontAwesome";
+            font-size: 14px;
+            font-weight: 900;
+            content: "\f3c5" !important;
+            color: #333;
+            margin-left: 10px;*/
+          }
+        }
+      }
+    }
+  }
+}
+//.component
+
+// トップページのボタン
+
+//CTAボタン
+.component.cta_sec {
+  .cta-row  .cta-column {
+    &:first-child {
+      .component.cta-button {
+        .button-cont a {
+          //左側のボタンスタイルを記入
+          width: auto;
+          font-size: 100%;
+          height: 52px;
+          display: inline-block;
+          margin: 0 auto;
+          padding: 12px 60px;
+          position: relative;
+          //btn_customに記述してあるのをコピペ
+          background: $main_color;
+          border-radius: 0;
+          color: #fff;
+        }
+      }
+    }
+    &:last-child {
+      .component.cta-button {
+       .button-cont a {
+         //右側のボタンスタイルを記入
+          width: auto;
+          font-size: 100%;
+          height: 52px;
+          display: inline-block;
+          margin: 0 auto;
+          padding: 12px 60px;
+          position: relative;
+          //btn_customに記述してあるのをコピペ
+          background: #ff5b2d;
+          border-radius: 0;
+          color: #000;
+        }
+      }
+    }
+  }
+}
+
+/*--- ボタン end---*/
+/*----------------------------------
+hedding（見出し）
+----------------------------------*/
+/* コンテンツエリアの見出し */
+.theme-fo-base .contents .component.heading {
+  h1, h2, h3, h4, h5 {
+    letter-spacing: 3px;
+  }
+
+  h2 {}
+
+  h3 {}
+}
+
+/*--- カスタム見出し ---*/
+// カスタム見出し01（左にborder下線）
+.theme-fo-base .contents {
+  .component.heading.hd_custom01 {
+    h1, h2, h3, h4, h5 {
+      letter-spacing: 3px;
+      padding: 0.25em 0.5em;
+      /*上下 左右の余白*/
+      background: transparent;
+      /*背景透明*/
+      border-left: solid 5px $main_color;
+      /*左線*/
+      border-bottom: solid 1px $main_color;
+      /*下線*/
+      margin-bottom: 1em;
+
+      &:before {
+        height: 0;
+      }
+    }
+  }
+// カスタム見出し02（下線）
+  .component.heading.hd_custom02 {
+    h1, h2, h3, h4, h5 {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 1em;
+      &:before {
+        content: '';
+        position: absolute;
+        bottom: -15px;
+        display: inline-block;
+        width: 60px;
+        height: 5px;
+        left: 50%;
+        -webkit-transform: translateX(-50%);
+        transform: translateX(-50%);
+        background-color: #A9894B;
+        border-radius: 2px;
+      }
+    }
+  }
+}
+
+/* サイドの見出し */
+/* 記事リストの見出し */
+/*--- 見出し end---*/
+/*----------------------------------
+main（コンテンツ）
+----------------------------------*/
+/*--- Toppage ---*/
+/* News & Topics */
+.theme-fo-base .wrapper .contents {
+  section.top_News_sec {}
+}
+
+/* サービス一覧 */
+.theme-fo-base .wrapper .contents {
+  section.topService_sec {}
+}
+
+/*--- ○○とは service ---*/
+/*--- 選ばれる理由 strength ---*/
+/*--- 導入事例一覧 case ---*/
+/*--- お知らせ一覧 news ---*/
+/*--- 料金 price ---*/
+/*--- よくあるご質問 faq ---*/
+/*--- 会社概要 company---*/
+/*--- プライバシーポリシー privacy ---*/
+/*--- 利用規約 terms ---*/
+/*--- お問い合わせ contact---*/
+/*--- 資料ダウンロードフォーム download ---*/
+/* ----------------------------------
+  blog(ブログテンプレート)
+----------------------------------*/
+section.prev-next-link {
+  a {
+    &:hover {
+      background: transparent;
+      opacity: .7;
+      
+    }
+
+    .prev-next-label {
+      
+      color:$base-text-color;
+    }
+  }
+}
+
+/*--- ブログページ---*/
+.theme-fo-base.clearfix {
+  section.blog_sec {}
+}
+
+/* ----------------------------------
+  カテゴリ・タグ自動生成ページ
+----------------------------------*/
+.theme-fo-base.clearfix {
+  .wrapper.clearfix {
+    .contents {
+
+      .category-preview,
+      .tag-preview {
+        box-sizing: border-box;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 20px;
+
+        article {
+          display: table;
+          width: calc(100% - 20px * 2);
+          padding: 20px;
+          border-bottom: 1px solid #2e2e2e;
+
+          .article-thumbnail {
+            display: table-cell;
+            width: 30%;
+
+            img {
+              width: 100%;
+            }
+          }
+
+          .article-cont {
+            display: table-cell;
+            width: 70%;
+            vertical-align: top;
+            margin-bottom: 50px;
+            padding: 10px 25px;
+
+            .article-title {
+              a {
+                color: $base-text-color;
+                font-weight: bold;
+              }
+            }
+
+            .article-meta-info {
+              position: relative;
+
+              .article-category {
+                &:before {
+                  color: $tag_color;
+                  content: "\f115";
+                  font-family: FontAwesome;
+                }
+
+                a {
+                  color: $tag_color;
+
+                  &:hover {
+                    opacity: .7;
+                  }
+                }
+              }
+
+              .tag-lists {
+                .article-tags {
+               
+               }
+              }
+            }
+          }
+        }
+
+        @include breakpoint-sp {
+          article {
+            display: block;
+            width: 100%;
+            padding: 0;
+            border-bottom: none;
+
+            .article-thumbnail {
+              display: block;
+              width: 100%;
+            }
+
+            .article-cont {
+              display: block;
+              width: 100%;
+              padding: 0;
+
+              .article-meta-info {
+                .tag-lists {
+                  display: block;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/*--- カテゴリ・タグ自動生成ページ end---*/
+/*----------------------------------
+side bar（サイドバー）
+----------------------------------*/
+.theme-fo-base .wrapper.side-left .contents,
+.theme-fo-base .wrapper.side-right .contents {
+  background: transparent;
+  border-left: none;
+  border-right: none;
+}
+
+/*---  タグクラウド  ---*/
+.theme-fo-base.clearfix {
+  .tag_cloud {
+    .tag {
+      background: #fff;
+      color: $tag_color;
+
+      &:hover {
+        opacity: .7;
+        
+        
+      }
+    }
+
+    /*  .tag:before {
+      content: "\f02b";
+      font-family: FontAwesome;
+    } */
+  }
+}
+
+/*---  ランキング  ---*/
+.theme-fo-base.clearfix {
+  .side {
+    .component.entry-list {
+      @include breakpoint-sp {
+        width: 90%;
+        margin: auto;
+      }
+
+      .entry-list-unit {
+        .article-rank {
+          margin: 0;
+        }
+
+        .article-rank.rank-1,
+        .article-rank.rank-2,
+        .article-rank.rank-3 {
+          background: $ranking_color !important;
+          border: 1px solid $ranking_color;
+        }
+
+        .article-rank.rank-4,
+        .article-rank.rank-5 {
+          background: #fff !important;
+          border: 1px solid $ranking_color;
+          color: $ranking_color;
+        }
+      }
+    }
+  }
+}
+
+/*----------------------------------
+  foot（フッター）
+----------------------------------*/
+/*ページトップへ戻る*/
+.foot {
+  .foot-cont {
+
+    //ボタン固定
+    .row.page_top {
+      .component.icon {
+        position: fixed;
+        right: 0px;
+        bottom: 0px;
+        z-index: 10;
+
+        .icon-cont {
+
+          //装飾
+          a {
+            width: 60px;
+            height: 60px;
+            display: block;
+            position: relative;
+            background: #B49538;
+
+            /*border-radius: 30px;丸にしたい時*/
+            //アイコン位置
+            i {
+              font-size: 40px;
+              position: absolute;
+              top: 8px;
+              left: 18px;
+              color: #fff;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/*----------------------------------
+編集画面用CSS（編集画面のみに効くCSS）
+----------------------------------*/
+/*
+@include edit-page {
+  .spOnly ,
+  .pcOnly ,
+  .pcFixed_section ,
+  .spFixed_section ,
+  .displayNnone ,
+  .poptrox-overlay .poptrox-popup .pi {
+    display: initial !important;
+    position: initial;
+    width: initial;
+  }
+    .theme-fo-base .wrapper .contents section.pcFixed_section .pageTopFixed_row ,
+    .theme-fo-base .wrapper .contents section.pcFixed_section .snsFixed_row {
+     width: initial;
+     position: initial;
+   }
+    .theme-fo-base .wrapper .contents section.bg_filter_section {
+     z-index: initial;
+  }
+  .page-screen .page-contents .contents section .ctrl-content-ui .ui-buttons {
+    left: 0;
+  }
+}
+*/
+/*CTAの編集画面に効く*/
+//フォントカラーを白にしてしまうとみえないので薄グレイで表示
+@include cta-edit {
+  .cta span.color-ffffff {
+    background: #ccc;
+  }
+}
